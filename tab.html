@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+	<title>Document</title>
+	<style type="text/css">
+		*{padding: 0;margin: 0;}
+		.tab{border: 1px solid salmon;}
+		.tab-title{display: flex;}
+		.tab-title li{flex: 1;text-align: center;list-style: none;background: #efefef;padding: 15px;border-right: 1px solid #EFEFEF;}
+		.tab-title li:last-child{
+			border: none;
+		}
+		.tab-title li.active{
+			background: #FA8072;
+			color: #FFF;
+		}
+		.tab-con li{
+			display: none;
+			padding: 20px;
+			box-sizing: border-box;
+		}
+		.tab-con li.active{
+			display: block;
+		}
+		
+		.tab2{border: 1px solid salmon;margin-top: 20px;}
+	</style>
+</head>
+<body>
+	<div class="tab">
+		<ul class="tab-title">
+			<li>A</li>
+			<li>B</li>
+			<li>C</li>
+		</ul>
+		<ul class="tab-con">
+			<li>a-con</li>
+			<li>b-con</li>
+			<li>c-con</li>
+		</ul>
+	</div>
+	
+	<div class="tab2">
+		<ul class="tab-title">
+			<li>A</li>
+			<li>B</li>
+			<li>C</li>
+		</ul>
+		<ul class="tab-con">
+			<li>a-con</li>
+			<li>b-con</li>
+			<li>c-con</li>
+		</ul>
+	</div>
+	
+	
+	<script type="text/javascript">
+		!function (){
+			var Tab = function(option) {
+				var defaults = {
+					el         : 'tab',
+					beginIndex : 0,
+					autoPlay   : 0,
+				}
+				this.option = Object.assign(defaults,option);
+				this.init()
+			}
+			
+			Tab.prototype = {
+				init:function(){
+					var tab = document.querySelector(`.${this.option.el}`)
+					this.title = tab.querySelectorAll('.tab-title li');
+					this.con = tab.querySelectorAll('.tab-con li');
+					//初始值
+					this.title[this.option.beginIndex].classList.add('active');
+					this.con[this.option.beginIndex].classList.add('active')
+					//绑定触发事件
+					this.bindEvent()
+					//自动轮播触发
+					this.option.autoPlay == 0 ? '' : this.autoPlay()
+				},
+				//绑定click触发
+				bindEvent:function() {
+					let self = this
+					for(let i in this.title){
+						this.title[i].onclick = function(){
+							self.option.beginIndex = i
+							self.handle()
+						}
+					}
+				},
+				//自动轮播
+				autoPlay:function() {
+					let self = this
+					let title = this.title;
+					setInterval(function (){
+						let beginIndex = self.option.beginIndex
+						
+						if(beginIndex < (title.length - 1)){
+							self.option.beginIndex ++
+							self.handle()
+						}else{
+							self.option.beginIndex = 0
+							self.handle()
+						}
+					},this.option.autoPlay)
+				},
+				//处理切换显示
+				handle:function(){
+					var title = this.title					
+					var index = this.option.beginIndex
+					for(let i=0;i<title.length;i++){
+						if(this.title[i].classList.contains('active')) {
+							this.title[i].classList.remove('active')
+							this.con[i].classList.remove('active')
+						}
+					}
+					this.title[index].classList.add('active')
+					this.con[index].classList.add('active')
+				}
+			}
+			window.Tab = Tab
+		}()
+		
+		var tab1 = new Tab({
+			el:'tab',
+		})
+		
+		var tab1 = new Tab({
+			el:'tab2',
+			beginIndex:2,
+			autoPlay:1500,
+		})
+	</script>
+</body>
+</html>
