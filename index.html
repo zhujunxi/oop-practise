@@ -4,12 +4,41 @@
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width,minimum-scale=1,maximum-scale=1,user-scalable=no" />
 		<title>OOP-practise</title>
+		<link rel="stylesheet" type="text/css" href="font/font.css"/>
+		<link rel="stylesheet" type="text/css" href="css/base.css"/>
+		<link rel="stylesheet" type="text/css" href="css/index.css"/>
 	</head>
 	<body>
-		<ul>
-			<li>
-				<a href="tab.html">TAB切换</a>
-			</li>
-		</ul>
+		<div class="box">
+			
+		</div>
+		
+		<script src="js/index.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			var listData = [
+				{
+					title:'基础效果',
+					icon:'&#xe601;',
+					item:[
+						{title:'TAB效果',link:'tab.html'},
+						{title:'TAB效果2',link:'tab.html'}
+					]
+				},
+				{
+					title:'组件',
+					icon:'&#xe601;',
+					item:[
+						{title:'暂无',link:''},
+						
+					]
+				}
+			]
+			var menu = new Menu({
+				el:'cell_title',
+				time:200,
+				initOpen:0,
+				listData:listData
+			})
+		</script>
 	</body>
 </html>
