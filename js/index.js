@@ -27,7 +27,7 @@
 		},
 		createDom:function(){
 			let listData = this.option.listData;
-			let box = document.querySelector('.box')
+			let list = document.querySelector('.list')
 			for(let i=0;i<listData.length;i++) {
 				let item = listData[i].item
 				let cell = document.createElement('div')
@@ -70,7 +70,7 @@
 					console.log(con)
 				}
 				cell.appendChild(con)
-				box.appendChild(cell)
+				list.appendChild(cell)
 			}
 		},
 		//绑定事件

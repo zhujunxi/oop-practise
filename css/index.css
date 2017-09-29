@@ -1,3 +1,19 @@
+.box{
+	padding: 0 15px;
+	box-sizing: border-box;
+	position: relative;
+	z-index: 1;
+}
+.title{
+	text-align: center;
+	padding: 30px 0;
+}
+.textShadow{
+	text-shadow: 0px 2px 0px #FFF;
+}
+.title p{
+	color: #999;
+}
 .cell {
 	background: #FFF;
 	border-radius: 2px;
