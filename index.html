@@ -21,10 +21,25 @@
 		<script type="text/javascript">
 			var listData = [
 				{
-					title:'基础效果',
+					title:'表单',
 					icon:'&#xe601;',
 					item:[
-						{title:'TAB效果',link:'tab.html'},
+						{title:'input',link:'tab.html'},
+						{title:'range',link:'tab.html'},
+						{title:'radio',link:'tab.html'},
+						{title:'checkbox',link:'tab.html'},
+						{title:'switch',link:'tab.html'},
+						
+					]
+				},
+				{
+					title:'操作反馈',
+					icon:'&#xe601;',
+					item:[
+						{title:'picker',link:'picker.html'},
+						{title:'toast',link:'tab.html'},
+						{title:'dialog',link:'tab.html'},
+						{title:'actionshert',link:'tab.html'},
 						
 					]
 				},
@@ -32,14 +47,21 @@
 					title:'组件',
 					icon:'&#xe601;',
 					item:[
-						{title:'picker组件',link:'picker.html'}
+						{title:'accordion',link:'picker.html'},
+						{title:'swiper',link:'picker.html'},
+						{title:'lightbox',link:'picker.html'},
+						{title:'pagination',link:'picker.html'},
+						{title:'tabbar',link:'tab.html'},
+						{title:'navbar',link:'picker.html'},
+						{title:'off canvas',link:'picker.html'},
+						{title:'pull to refresh',link:'picker.html'}
 					]
 				}
 			]
 			var menu = new Menu({
 				el:'cell_title',
 				time:200,
-				initOpen:-1,
+				initOpen:0,
 				listData:listData
 			})
 		</script>
