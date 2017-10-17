@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>Accordion-折叠菜单</title>
+		<link rel="stylesheet" type="text/css" href="../font/font.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/base.css"/>
+		<style type="text/css">
+			body{padding: 20px;box-sizing: border-box;}
+			h2{font-size: 16px;border-bottom: 1px solid #E5E5E5;margin: 30px 0 10px 0;padding-bottom: 5px;}
+			.accord-item{margin-bottom: 0px;}
+			.accord-title{padding: 10px 12px;background: #0c9de4;color: #FFF;border-bottom: 1px solid #0a86bb;}
+			.accord-con{border: 1px solid #0c9de4;height: 0;overflow: hidden;transition:all 300ms;transform: translate3d(0, 0, 0);}
+			.accord-item.active .accord-title{border-bottom: none;}
+			.accord-item.active .accord-con{height: auto;}
+			.accord-item:last-child .accord-title{border-bottom: none;}
+		</style>
+	</head>
+	<body>
+		<h2>联动折叠菜单</h2>
+		<div class="accord accord1">
+			<div class="accord-item active">
+				<div class="accord-title">Accordion1</div>
+				<div class="accord-con">
+					<div style="padding: 15px;">折叠菜单内容1</div>
+				</div>
+			</div>
+			<div class="accord-item">
+				<div class="accord-title">Accordion2</div>
+				<div class="accord-con">
+					<div style="padding: 15px;">折叠菜单内容1</div>
+				</div>
+			</div>
+			<div class="accord-item">
+				<div class="accord-title">Accordion3</div>
+				<div class="accord-con">
+					<div style="padding: 15px;">折叠菜单内容1</div>
+				</div>
+			</div>
+		</div>
+		<h2>折叠菜单</h2>
+		<div class="accord accord2">
+			<div class="accord-item active">
+				<div class="accord-title">Accordion1</div>
+				<div class="accord-con">
+					<div style="padding: 15px;">折叠菜单内容1</div>
+				</div>
+			</div>
+			<div class="accord-item">
+				<div class="accord-title">Accordion2</div>
+				<div class="accord-con">
+					<div style="padding: 15px;">折叠菜单内容1</div>
+				</div>
+			</div>
+			<div class="accord-item">
+				<div class="accord-title">Accordion3</div>
+				<div class="accord-con">
+					<div style="padding: 15px;">折叠菜单内容1</div>
+				</div>
+			</div>
+		</div>
+		<script type="text/javascript">
+			+function() {
+				var Accord = function(options) {
+					Object.assign(this,options)
+					this.transitionEnd = function() {
+						var content = this;
+						var item = this.parentNode;
+						if(item.classList.contains('active')) {
+							content.style.transitionDuration = 0+'ms';
+							content.style.height = 'auto';
+							content.style.transitionDuration = '';
+							
+						}else{
+							content.style.height = ''
+						}
+					}
+					this.bindEvent()					
+				};
+				Accord.prototype = {
+					bindEvent: function() {
+						var self = this;
+						var main = document.querySelector(this.el)
+						console.log(main)
+						var collapse = main.querySelectorAll('.accord-item');
+						
+						for(var i=0;i< collapse.length;i++) {
+							collapse[i].querySelector('.accord-title').addEventListener('click',function() {
+								if(self.closeOther){
+									var items = main.querySelectorAll('.accord-item.active');
+									for(let j = 0;j<items.length;j++){
+										self.close(items[j]);
+									}
+								}
+								if(this.parentNode.classList.contains('active')) {
+									self.close(this.parentNode)
+								}else{
+									self.open(this.parentNode)
+								}
+							},false)
+						}
+					},
+					open: function(item) {
+						var content = item.querySelector('.accord-con');
+						content.style.height = content.scrollHeight+'px';
+						content.removeEventListener('transitionend',Accord.transitionEnd,false)
+						content.addEventListener('transitionend',Accord.transitionEnd,false)
+						item.classList.add('active')
+					},
+					close: function(item) {
+						var content = item.querySelector('.accord-con');
+						item.classList.remove('active');
+						content.style.transitionDuration = 0+'ms';
+						content.style.height = content.scrollHeight + 'px';
+						var clientLeft = content.clientLeft;
+						content.style.transitionDuration = '';
+						content.style.height = '';
+						content.removeEventListener('transitionend',Accord.transitionEnd,false)
+						content.addEventListener('transitionend',Accord.transitionEnd,false)
+					}
+				}
+				window.Accord = Accord
+			}();
+			
+			new Accord({
+				el:'.accord1',
+				closeOther:true
+			})
+			new Accord({
+				el:'.accord2',
+				closeOther:false
+			})
+		</script>
+	</body>
+</html>
