@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+	<title>Document</title>
+</head>
+<body>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+<script type="text/javascript">
+	(function(){
+		window.NCanlender = function(container, params) {
+			'use strict';
+			params = params || {};
+			var options = {
+				container: container,
+				width: window.innerWidth
+			};
+			var nc = this;
+			var originParams = {};
+			var isClick = false;
+			nc.year = 0;
+			nc.month = 0;
+			var week = ["周一","周二","周三","周四","周五","周六","周日"];
+			for(var param in params) {
+				if(typeof params[param] === 'object') {
+					originParams[param] = {};
+					for(var defPa in params[param]) {
+						originParams[param][defPa] = params[param][defPa];
+					}
+				} else{
+					originParams[param] = params[param];
+				}
+			}
+			for(var opt in options) {
+				if(typeof params[opt] === 'object') {
+					for(var defOpt in options[opt]){
+						if(typeof params[opt][defOpt] === 'undefined') {
+							params[opt][defOpt] = options[opt][defOpt];
+						}
+					}
+				}else if(typeof params[opt] === 'undefined') {
+					params[opt] = options[opt];
+				}
+			}
+			
+		}
+	})()
+</script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

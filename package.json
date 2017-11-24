@@ -1,0 +1,24 @@
+{
+  "name": "oop-practise",
+  "version": "0.0.1",
+  "description": "a javascript opp project with practise",
+  "main": "index.html",
+  "scripts": {
+    "dev" : "http-server -p 8001 -o",
+    "start": "npm run dev",
+    "test" : "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zhujunxi/oop-practise.git"
+  },
+  "author": "zhujunxi",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/zhujunxi/oop-practise/issues"
+  },
+  "homepage": "https://github.com/zhujunxi/oop-practise#readme",
+  "dependencies": {
+    "http-server": "^0.10.0"
+  }
+}

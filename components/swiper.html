@@ -21,7 +21,11 @@
 		</style>
 	</head>
 	<body>
+
 		<h2>轮播图</h2>
+		<div id="box">
+			
+		</div>
 		<div class="list">
 			<ul>
 				<li><img src="../static/01.jpg" /></li>
@@ -31,15 +35,19 @@
 				<li><img src="../static/05.jpg" /></li>
 			</ul>
 		</div>
+		<div class="box">
+			<div class="list">
+				2
+			</div>
+		</div>
 		<script type="text/javascript">
-			var $ = function (id) {
-				return typeof id === "string" 
-					? document.getElementById(id)
-					: id
+			
+			var $ = function(element,oParent) {
+				
+				return 	(oParent || document).querySelector(element)			
 			}
-			var $$ = function (tagName, oParent) {
-				return (oParent || document).getElementsByTagName(tagName)
-			}
-		</script>
+			console.log($(".list"))
+			console.log($(".list",$(".box")))
+		</script>		
 	</body>
 </html>
