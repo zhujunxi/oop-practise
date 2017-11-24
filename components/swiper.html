@@ -7,47 +7,147 @@
 		<link rel="stylesheet" type="text/css" href="../font/font.css"/>
 		<link rel="stylesheet" type="text/css" href="../css/base.css"/>
 		<style type="text/css">
-			body{padding: 20px;box-sizing: border-box;}
-			h2{font-size: 16px;border-bottom: 1px solid #E5E5E5;margin: 30px 0 10px 0;padding-bottom: 5px;}
-			
-			.list{position:relative;width:490px;height:170px;overflow:hidden;}
-			.list ul{position:absolute;top:0;left:0;}
-			.list li{width:490px;height:170px;overflow:hidden;}
-			.count{position:absolute;right:0;bottom:5px;}
-			.count li{color:#fff;float:left;width:20px;height:20px;cursor:pointer;margin-right:5px;overflow:hidden;background:#F90;opacity:0.7;filter:alpha(opacity=70);border-radius:20px;}
-			.count li.current{color:#fff;opacity:1;filter:alpha(opacity=100);font-weight:700;background:#f60;}
-			#tmp{width:100px;height:100px;background:red;position:absolute;}
-
+			/* 主体 */
+			.container {margin: 20px auto;width: 100%;overflow: hidden;position: relative}
+			.img-list {position: relative;width: 9999px;list-style: none}
+			.img-list li {float: left;width: 375px;}
+			.img-list li img{width: 375px;}
+			/* 箭头 */
+			.arrow{width: 60px;height: 130px;line-height: 130px;text-align: center;font-size: 20px;position: absolute;top: 0%;background-color: rgba(0, 0, 0, .5)}
+			.btn-prev {left: 0;}
+			.btn-next {right: 0;}
+			/* 指示器 */
+			.dot {position: absolute;bottom: 10px;width:100%;text-align: center;}
+			.dot span{display: inline-block;width: 20px;height: 20px;background-color: yellow;line-height: 20px;border-radius: 50%;cursor: pointer;}
+			.dot .active{background-color: red;color: #FFF;}
 		</style>
 	</head>
 	<body>
 
-		<h2>轮播图</h2>
-		<div id="box">
-			
-		</div>
-		<div class="list">
-			<ul>
+		<h2>slider</h2>
+		
+		<div class="container">
+			<ul class="img-list clearfix">
 				<li><img src="../static/01.jpg" /></li>
 				<li><img src="../static/02.jpg" /></li>
 				<li><img src="../static/03.jpg" /></li>
 				<li><img src="../static/04.jpg" /></li>
 				<li><img src="../static/05.jpg" /></li>
 			</ul>
+			<ul class="dot">
+				<span class="active">1</span>
+				<span>2</span>
+				<span>3</span>
+				<span>4</span>
+				<span>5</span>
+			</ul>
+			<a href="javascript:void(0)" class="arrow btn-prev">&lt;</a>
+			<a href="javascript:void(0)" class="arrow btn-next">&gt;</a>
 		</div>
-		<div class="box">
-			<div class="list">
-				2
-			</div>
-		</div>
+		<script src="https://cdn.bootcss.com/jquery/1.11.3/jquery.js"></script>
 		<script type="text/javascript">
-			
-			var $ = function(element,oParent) {
-				
-				return 	(oParent || document).querySelector(element)			
+			function Carousel(config) {
+				var $node = $(config.el);
+				this.$pic = $node.find('.img-list')
+				this.$picWidth = this.$pic.children().width()
+				this.picLength = this.$pic.children().length
+				this.$btnPrev = $node.find('.btn-prev')
+				this.$btnNext = $node.find('.btn-next')
+				this.$pageIndex = $node.find('.dot')
+				this.num = 0
+				this.lock = false
+	
+				this.init()
+				this.bind()
+				this.autoPlay()
 			}
-			console.log($(".list"))
-			console.log($(".list",$(".box")))
+			Carousel.prototype = {
+				init: function() {
+					var $picFirst = this.$pic.children().eq(0).clone();
+					var	$picLast = this.$pic.children().eq(this.picLength - 1).clone();
+	
+					this.$pic.prepend($picLast)
+					this.$pic.append($picFirst)
+					this.$pic.width(this.$picWidth * this.$pic.children().length)
+					this.$pic.css({
+						'left': -this.$picWidth
+					})
+				},
+				showDot: function() {
+					this.$pageIndex.children().removeClass('active')
+					this.$pageIndex.children().eq(this.num).addClass('active')
+				},
+				autoPlay: function() {
+					var self = this
+					setInterval(function() {
+						self.play()
+					}, 3000)
+				},
+				renderDot: function() {
+					for (var i = 0; i < this.picLength; i++) {
+						var $li = $('<li></li>')
+						this.$pageIndex.append($li)
+					}
+					this.$pageIndex.children().eq(0).addClass('active')
+				},
+				bind: function() {
+					var self = this
+	
+					this.$btnNext.on('click', function() {
+						self.play()
+					})
+	
+					this.$btnPrev.on('click', function() {
+						self.play(true)
+					})
+	
+					this.$pageIndex.on('click', 'li', function() {
+						self.num = self.$pageIndex.children().index($(this))
+						self.showDot()
+						self.$pic.animate({
+							'left': -(self.num + 1) * self.$picWidth
+						})
+					})
+				},
+				play: function(isBack) {
+					var self = this;
+					if (this.lock) return;
+					this.lock = true;
+					if(isBack){
+						self.$pic.animate({
+							'left': '+=' + this.$picWidth
+						}, function() {
+							self.num--
+								if (self.num < 0) {
+									self.$pic.css('left', -(self.picLength * self.$picWidth))
+									self.num = self.picLength - 1
+								}
+							self.lock = false
+							self.showDot()
+						})
+					}else {
+						self.$pic.animate({
+							'left': '-=' + this.$picWidth
+						}, function() {
+							self.num++
+								if (self.num === self.picLength) {
+									self.$pic.css('left', -self.$picWidth)
+									self.num = 0
+								}
+							self.lock = false
+							self.showDot()
+						})
+					}
+				}	
+			}
+	
+			new Carousel({
+				el:'.container',
+				autoPlay:true,
+				time:3000,
+				showDot:true,
+				showBtn:true,
+			})
 		</script>		
 	</body>
 </html>

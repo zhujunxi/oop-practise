@@ -9,6 +9,16 @@ body {
 	width: 100%;
 	
 }
+.clearfix {
+    *zoom: 1;
+}
+.clearfix::after{
+    display: block;
+    clear: both;
+    visibility: hidden;
+    content: '';
+    height: 0;
+}
 /*body:before {
           content: "";
           position: fixed;
