@@ -18,7 +18,7 @@
 			.btn-next {right: 0;}
 			/* 指示器 */
 			.dot {position: absolute;bottom: 10px;width:100%;text-align: center;}
-			.dot span{display: inline-block;width: 20px;height: 20px;background-color: yellow;line-height: 20px;border-radius: 50%;cursor: pointer;}
+			.dot li{display: inline-block;width: 20px;height: 20px;background-color: yellow;line-height: 20px;border-radius: 50%;cursor: pointer;}
 			.dot .active{background-color: red;color: #FFF;}
 		</style>
 	</head>
@@ -34,115 +34,109 @@
 				<li><img src="../static/04.jpg" /></li>
 				<li><img src="../static/05.jpg" /></li>
 			</ul>
-			<ul class="dot">
-				<span class="active">1</span>
-				<span>2</span>
-				<span>3</span>
-				<span>4</span>
-				<span>5</span>
-			</ul>
-			<a href="javascript:void(0)" class="arrow btn-prev">&lt;</a>
-			<a href="javascript:void(0)" class="arrow btn-next">&gt;</a>
+			<ul class="dot"></ul>
+			
 		</div>
 		<script src="https://cdn.bootcss.com/jquery/1.11.3/jquery.js"></script>
 		<script type="text/javascript">
 			function Carousel(config) {
-				var $node = $(config.el);
-				this.$pic = $node.find('.img-list')
-				this.$picWidth = this.$pic.children().width()
-				this.picLength = this.$pic.children().length
-				this.$btnPrev = $node.find('.btn-prev')
-				this.$btnNext = $node.find('.btn-next')
-				this.$pageIndex = $node.find('.dot')
-				this.num = 0
-				this.lock = false
+				Object.assign(this,config);
+				this.$imgList = $(this.el).find('.img-list')
+				this.$picWidth = this.$imgList.children().width()
+				this.picLength = this.$imgList.children().length
+				this.$pageIndex = $(this.el).find('.dot')
+				this.num = this.initNum;
+				this.lock = false;
 	
 				this.init()
-				this.bind()
-				this.autoPlay()
+				this.autoRun()
+				this.renderDot()
+				this.renderArrow()
 			}
 			Carousel.prototype = {
 				init: function() {
-					var $picFirst = this.$pic.children().eq(0).clone();
-					var	$picLast = this.$pic.children().eq(this.picLength - 1).clone();
+					var $picFirst = this.$imgList.children().eq(0).clone();
+					var	$picLast = this.$imgList.children().eq(this.picLength - 1).clone();
 	
-					this.$pic.prepend($picLast)
-					this.$pic.append($picFirst)
-					this.$pic.width(this.$picWidth * this.$pic.children().length)
-					this.$pic.css({
+					this.$imgList.prepend($picLast)
+					this.$imgList.append($picFirst)
+					this.$imgList.width(this.$picWidth * this.$imgList.children().length)
+					this.$imgList.css({
 						'left': -this.$picWidth
 					})
 				},
-				showDot: function() {
+				changeDot: function() {
 					this.$pageIndex.children().removeClass('active')
 					this.$pageIndex.children().eq(this.num).addClass('active')
 				},
-				autoPlay: function() {
+				autoRun: function() {
 					var self = this
 					setInterval(function() {
-						self.play()
-					}, 3000)
+						self.play('next')
+					},10000)
+				},
+				play: function(direct) {
+					var self = this;
+					if (this.lock) return;
+					this.lock = true;
+					if(direct === 'prev'){
+						self.$imgList.animate({
+							'left': '+=' + this.$picWidth
+						}, function() {
+							self.num--
+							if (self.num < 0) {
+								self.$imgList.css('left', -(self.picLength * self.$picWidth))
+								self.num = self.picLength - 1
+							}
+							self.lock = false
+							self.changeDot()
+						})
+					}else {
+						self.$imgList.animate({
+							'left': '-=' + this.$picWidth
+						}, function() {
+							self.num++
+							if (self.num === self.picLength) {
+								self.$imgList.css('left', -self.$picWidth)
+								self.num = 0
+							}
+							self.lock = false
+							self.changeDot()
+						})
+					}
 				},
 				renderDot: function() {
 					for (var i = 0; i < this.picLength; i++) {
-						var $li = $('<li></li>')
+						var $li = `<li>${i+1}</li>`
 						this.$pageIndex.append($li)
 					}
 					this.$pageIndex.children().eq(0).addClass('active')
-				},
-				bind: function() {
-					var self = this
-	
-					this.$btnNext.on('click', function() {
-						self.play()
-					})
-	
-					this.$btnPrev.on('click', function() {
-						self.play(true)
-					})
-	
 					this.$pageIndex.on('click', 'li', function() {
 						self.num = self.$pageIndex.children().index($(this))
-						self.showDot()
-						self.$pic.animate({
+						self.changeDot()
+						self.$imgList.animate({
 							'left': -(self.num + 1) * self.$picWidth
 						})
 					})
 				},
-				play: function(isBack) {
+				renderArrow:function() {
 					var self = this;
-					if (this.lock) return;
-					this.lock = true;
-					if(isBack){
-						self.$pic.animate({
-							'left': '+=' + this.$picWidth
-						}, function() {
-							self.num--
-								if (self.num < 0) {
-									self.$pic.css('left', -(self.picLength * self.$picWidth))
-									self.num = self.picLength - 1
-								}
-							self.lock = false
-							self.showDot()
-						})
-					}else {
-						self.$pic.animate({
-							'left': '-=' + this.$picWidth
-						}, function() {
-							self.num++
-								if (self.num === self.picLength) {
-									self.$pic.css('left', -self.$picWidth)
-									self.num = 0
-								}
-							self.lock = false
-							self.showDot()
-						})
-					}
+					var preBtn = '<a href="javascript:void(0)" class="arrow btn-prev">&lt;</a>'
+					var nextBtn = '<a href="javascript:void(0)" class="arrow btn-next">&gt;</a>'
+					$(this.el).append(preBtn)
+					$(this.el).append(nextBtn)
+					$(".btn-prev").on('click', function() {
+						self.play('prev')
+					})
+					$(".btn-next").on('click', function() {
+						self.play('next')
+					})	
 				}	
 			}
 	
 			new Carousel({
 				el:'.container',
+				initNum:1,
 				autoPlay:true,
 				time:3000,
 				showDot:true,
